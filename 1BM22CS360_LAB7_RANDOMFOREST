@@ -1,0 +1,10 @@
+from google.colab import files iris=files.upload() df1=pd.read_csv("iris (4).csv") df1.head() 
+X = df1.drop('species', axis=1) 
+y = df1['species'] 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0) 
+rf_classifier = RandomForestClassifier(random_state=0) 
+rf_classifier.fit(X_train, y_train) y_pred = rf_classifier.predict(X_test) 
+default_accuracy = accuracy_score(y_test, y_pred) print(f"Accuracy with default n_estimators: {default_accuracy}") best_accuracy = 0 best_n_estimators = 0 for n_estimators in range(1, 101):     rf_classifier = RandomForestClassifier(n_estimators=n_estimators, random_state=0)     rf_classifier.fit(X_train, y_train)     y_pred = rf_classifier.predict(X_test)     accuracy = accuracy_score(y_test, y_pred)     if accuracy > best_accuracy: 
+        best_accuracy = accuracy         best_n_estimators = n_estimators print(f"\nBest accuracy: {best_accuracy} achieved with n_estimators = {best_n_estimators}") cm = confusion_matrix(y_test, y_pred) 
+plt.figure(figsize=(8, 6)) 
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues",             xticklabels=np.unique(y_test), yticklabels=np.unique(y_test)) plt.xlabel("Predicted") plt.ylabel("Actual") plt.title("Confusion Matrix") plt.show() 
